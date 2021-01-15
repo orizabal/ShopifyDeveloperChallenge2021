@@ -1,0 +1,16 @@
+{% block head %}
+<title>Image Repository</title>
+{% endblock %}
+
+{% block body %}
+    <h2>Welcome to the Image Repository</h2>
+    <form method="POST" action="/" enctype="multipart/form-data">
+        <input type="file" name="image" accept=".jpg,.png">
+        <input type="submit" value="Upload">
+    </form>
+
+    {% for f in images %}
+        <img src={{ '../images/' + f }} >
+    {% endfor %}
+
+{% endblock %}

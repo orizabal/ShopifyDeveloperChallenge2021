@@ -1,0 +1,11 @@
+{% block head %}
+<title>Image Gallery</title>
+{% endblock %}
+
+{% block body %}
+    <h2>Welcome to the Image Gallery</h2>
+    {% for f in images %}
+        <img src={{ '../images/' + f }} >
+    {% endfor %}
+
+{% endblock %}
