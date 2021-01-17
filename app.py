@@ -1,15 +1,40 @@
 import boto3
 import pyrebase
-from flask import Flask, render_template,  request, redirect
+from flask import Flask, render_template,  request, redirect, flash
 from botocore.client import Config
 import secrets
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///repo.db'
-db.init_app(app)
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), nullable=False)
+    private_images = db.relationship('PrivateImage', backref='user')
+    public_images = db.relationship('PublicImage', backref='user')
+
+    def __repr__(self):
+        return '<User %r>' % self.id
+
+
+class PrivateImage(db.Model):
+    key = db.Column(db.String(200), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<PrivateImage %r>' % self.key
+
+
+class PublicImage(db.Model):
+    key = db.Column(db.String(200), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<PublicImage %r>' % self.key
+
 
 firebase = pyrebase.initialize_app(secrets.PYREBASE_CONFIG)
 auth = firebase.auth()
@@ -88,9 +113,17 @@ def signup():
         email = request.form['email']
         password = request.form['password']
 
+        user = User.query.filter_by(email=email).first()
+        print(user)
+
+        if user:
+            return redirect('/login')
+
         try:
-            user = auth.create_user_with_email_and_password(email, password)
-            print(user)
+            auth.create_user_with_email_and_password(email, password)
+            new_user = User(email=email)
+            db.session.add(new_user)
+            db.session.commit()
             return redirect('/')
         except:
             return render_template('signup.html', us=unsuccessful)
