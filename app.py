@@ -3,8 +3,13 @@ import pyrebase
 from flask import Flask, render_template,  request, redirect
 from botocore.client import Config
 import secrets
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///repo.db'
+db.init_app(app)
 
 firebase = pyrebase.initialize_app(secrets.PYREBASE_CONFIG)
 auth = firebase.auth()
