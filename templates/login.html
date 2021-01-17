@@ -1,0 +1,21 @@
+{% block head %}
+<title>Image Repository</title>
+{% endblock %}
+
+{% block body %}
+    <h2>Welcome to the Image Repository</h2>
+    {% if us %}
+    {{ us }}
+    {% endif %}
+    <form method="POST" action="/login" >
+        <label>Email</label>
+        <input type="text" name="email" >
+
+        <label>Password</label>
+        <input type="password" name="password" >
+
+        <input type="submit" value="Login">
+        <a href="/signup" >First time here? Make a new account</a>
+    </form>
+
+{% endblock %}
