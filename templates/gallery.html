@@ -17,10 +17,13 @@
     <input type="checkbox" onclick="toggleAll(this)" >Select all</input>
     <input type="submit" value="Delete">
     {% for image in images %}
-        <img src="https://orizabal-shopify-challenge-21.s3.ca-central-1.amazonaws.com/{{ image.key }}" style="width: 250px" >
-        <label for={{ image.key }} >{{ image.key }}</label>
-        <input type="checkbox" name="select-object" id={{ image.key }} value={{ image.key }} >
+        <img src="https://orizabal-shopify-challenge-21.s3.ca-central-1.amazonaws.com/{{ image }}" style="width: 250px" >
+        <label for={{ image }} >{{ image }}</label>
+        <input type="checkbox" name="select-object" id={{ image }} value={{ image }} >
     {%  endfor %}
+    </form>
+    <form method="POST" action="/logout" >
+        <input type="submit" value="Logout" />
     </form>
 
 {% endblock %}
